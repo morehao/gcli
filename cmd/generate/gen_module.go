@@ -59,14 +59,28 @@ func genModule() error {
 	for _, v := range analysisRes.TplAnalysisList {
 		var modelFields []ModelField
 		for _, field := range v.ModelFields {
+			nullableDesc := nullableDefaultDesc
+			if field.IsNullable {
+				nullableDesc = ""
+			}
+			defaultValue := fmt.Sprintf("%s %s", fieldDefaultKeyword, field.DefaultValue)
+			if field.DefaultValue == "" {
+				defaultValue = fmt.Sprintf("%s ''", fieldDefaultKeyword)
+			}
+			comment := fmt.Sprintf("%s: %s", fieldCommentKeyword, field.Comment)
+			if field.Comment == "" {
+				comment = ""
+			}
 			modelFields = append(modelFields, ModelField{
+				IsPrimaryKey:       field.ColumnKey == codegen.ColumnKeyPRI,
 				FieldName:          gutils.ReplaceIdToID(field.FieldName),
 				FieldLowerCaseName: gutils.SnakeToLowerCamel(field.FieldName),
 				FieldType:          field.FieldType,
 				ColumnName:         field.ColumnName,
 				ColumnType:         field.ColumnType,
-				Comment:            field.Comment,
-				IsPrimaryKey:       field.ColumnKey == codegen.ColumnKeyPRI,
+				NullableDesc:       nullableDesc,
+				DefaultValue:       defaultValue,
+				Comment:            comment,
 			})
 		}
 
