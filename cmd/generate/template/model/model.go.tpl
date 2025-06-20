@@ -11,7 +11,7 @@ type {{.StructName}}Entity struct {
     {{- if isBuiltInField .FieldName}}
         {{- continue}}
     {{- else}}
-	{{.FieldName}} {{.FieldType}} `gorm:"column:{{.ColumnName}};comment:{{.Comment}}"`
+	{{.FieldName}} {{.FieldType}} `gorm:"column:{{.ColumnName}};type:{{.ColumnType}};{{.NullableDesc}};{{.DefaultValue}};{{.Comment}}"`
 	{{- end}}
 {{- end}}
 }
